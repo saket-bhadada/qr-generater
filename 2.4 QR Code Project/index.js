@@ -10,7 +10,7 @@ const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(express.static(__dirname));
 app.get("/",(req,res)=>{
   res.sendFile(__dirname+"/front.html");
 });
@@ -19,14 +19,18 @@ app.post("/submit",(req,res)=>{
   if(!url){
     return res.send("<h1>error</h1>");
   }
-  const qr_png = qr.image(url,{type:"png"});
-  qr_png.pipe(fs.createWriteStream("qr_img.png"));
+  const qr_png = qr.imageSync(url,{type:"png"});
+  // qr_png.pipe(fs.createWriteStream("qr_img.png"));
+  fs.writeFileSync("qr_img.png",qr_png);
   fs.writeFile("URL.txt",url,(err)=>{
-    if(err) throw err;
+    if (err) return res.status(500).send("Failed to save URL");
+      res.json({ success: true });
     console.log("file has been saved");
-    res.sendFile(__dirname+"/qr_img.png");
-  })
+    
+    // res.sendFile(__dirname+"/qr_img.png");
+  });
 });
+
 app.listen(port,()=>{
   console.log(`listning on the port ${port}`);
 });
