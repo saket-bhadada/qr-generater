@@ -12,23 +12,31 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static(__dirname));
 app.get("/",(req,res)=>{
-  res.sendFile(__dirname+"/front.html");
+  res.sendFile(__dirname + "/front.html");
 });
 app.post("/submit",(req,res)=>{
   const url = req.body.url;
-  if(!url){
-    return res.send("<h1>error</h1>");
+  if (!url) {
+    return res.status(400).send("URL is required.");
   }
-  const qr_png = qr.imageSync(url,{type:"png"});
-  // qr_png.pipe(fs.createWriteStream("qr_img.png"));
-  fs.writeFileSync("qr_img.png",qr_png);
-  fs.writeFile("URL.txt",url,(err)=>{
-    if (err) return res.status(500).send("Failed to save URL");
-      res.json({ success: true });
-    console.log("file has been saved");
-    
-    // res.sendFile(__dirname+"/qr_img.png");
-  });
+
+  try {
+    const qr_png = qr.imageSync(url, { type: "png" });
+    fs.writeFileSync("qr_img.png", qr_png);
+
+    // This part is not critical for the user, so we don't need to wait for it.
+    fs.writeFile("URL.txt", url, (err) => {
+      if (err) {
+        console.error("Failed to save URL.txt:", err);
+      }
+      console.log("The file URL.txt has been saved!");
+    });
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Failed to generate QR code:", error);
+    res.status(500).send("Failed to generate QR code.");
+  }
 });
 
 app.listen(port,()=>{

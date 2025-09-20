@@ -1,0 +1,31 @@
+{
+  "name": "qr-generater",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saket-bhadada/qr-generater.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saket-bhadada/qr-generater/issues"
+  },
+  "homepage": "https://github.com/saket-bhadada/qr-generater#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "qr-image": "^3.2.0",
+    "url": "^0.11.4"
+  }
+}
